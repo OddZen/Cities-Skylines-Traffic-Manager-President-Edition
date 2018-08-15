@@ -22,8 +22,8 @@ namespace TrafficManager.Manager.Impl {
 		public const float MIN_SPEED = 8f * 0.2f; // 10 km/h
 		public const float ICY_ROADS_MIN_SPEED = 8f * 0.4f; // 20 km/h
 		public const float ICY_ROADS_STUDDED_MIN_SPEED = 8f * 0.8f; // 40 km/h
-		public const float WET_ROADS_MAX_SPEED = 8f * 2f; // 100 km/h
-		public const float WET_ROADS_FACTOR = 0.75f;
+		public const float WET_ROADS_MAX_SPEED = 8f * 2.6f; // 130 km/h
+		public const float WET_ROADS_FACTOR = 0.8f;
 		public const float BROKEN_ROADS_MAX_SPEED = 8f * 1.6f; // 80 km/h
 		public const float BROKEN_ROADS_FACTOR = 0.75f;
 
@@ -653,7 +653,7 @@ namespace TrafficManager.Manager.Impl {
 					maxSpeed = minSpeed + (float)segment.m_condition * 0.0039215686f * (maxSpeed - minSpeed);
 				}
 			} else {
-				maxSpeed *= 1f + (float)segment.m_condition * 0.0005882353f; // vanilla: ±0% .. +15 %
+				maxSpeed *= 1f + (float)segment.m_condition * 0.0005882353f; // vanilla: 0 .. +15%
 			}
 
 			maxSpeed = ApplyRealisticSpeeds(maxSpeed, vehicleId, ref state, vehicleInfo);
@@ -677,14 +677,14 @@ namespace TrafficManager.Manager.Impl {
 			if (Options.realisticSpeeds) {
 				float vehicleRand = 0.01f * (float)GetVehicleRand(vehicleId);
 				if (vehicleInfo.m_isLargeVehicle) {
-					speed *= 0.75f + vehicleRand * 0.25f; // a little variance, 0.75 .. 1
+					speed *= 0.98f + vehicleRand * 0.1f; // a little variance, 0.98 .. 1.08
 				} else if (state.recklessDriver) {
-					speed *= 1.3f + vehicleRand * 1.7f; // woohooo, 1.3 .. 3
+					speed *= 1.2f + vehicleRand * 0.13f; // woohooo, 1.2 .. 1.33
 				} else {
-					speed *= 0.8f + vehicleRand * 0.5f; // a little variance, 0.8 .. 1.3
+					speed *= 1f + vehicleRand * 0.2f; // a little variance, 1 .. 1.2
 				}
 			} else if (state.recklessDriver) {
-				speed *= 1.5f;
+				speed *= 1.25f;
 			}
 			return speed;
 		}
